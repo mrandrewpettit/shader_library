@@ -40,5 +40,7 @@ export RMAN_SHADERPATH="${HOME}/shader_library/bin/Renderman-${RMAN_VERSION}"
 Again, make sure to run `source ~/.bash_aliases` after writing environment variables to file.
 
 > NOTE: if you are setting the env variables in WSL but need to access them in windows, then add an additional command in `~/.bash_aliases` to share the variables across operating systems:
-`export WSLENV=$WSLENV:PIXAR_ROOT/p:RMAN_VERSION:RMANTREE/p:RMAN_SHADERPATH/p`
-To access the variables in windows you must start a wsl terminal and then access windows through `cmd.exe`
+```
+export WSLENV=$WSLENV:PIXAR_ROOT/p:RMAN_VERSION:RMANTREE/p:RMAN_SHADERPATH/p
+```
+> To access the variables in windows you must start a wsl terminal and then access windows through `cmd.exe`
