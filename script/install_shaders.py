@@ -8,79 +8,78 @@ from collections import OrderedDict
 class ShaderInfo(object):
 	'''
 	Creates a ShaderInfo object containing:
-		pathname = The (source) path name of the compiled shader.
-		flatname = The flattened name of the compiled shader file.
+		path = The (source) path of the compiled shader.
+		shaderName = The shader file.
 	'''
-	def __init__(self, pathname, flatname):
-		self.pathname = pathname
-		self.flatname = flatname
+	def __init__(self, path, name):
+		self.path = path
+		self.name = name
 
-def _Flatten(pathname):
+def _Extract(path):
 	'''
-	Replace directory path separators with '_'
-		data/FooBar.oso -> data_FooBar.oso
+	Get shader file name from end of file path
 	'''
-	return str(pathname).replace(os.sep, '_')
+	return str(path).rsplit(os.sep, 1)[-1]
 
-def _FlattenOSLShader(pathname):
+def _ExtractOSLShader(path):
 	'''
 	Create a ShaderInfo object
 	'''
-	flatname = _Flatten(pathname)
-	return ShaderInfo(pathname, flatname)
+	shaderName = _Extract(path)
+	return ShaderInfo(path, shaderName)
 
-def _InstallFile(shader_info, destination, copy):
+def _InstallFile(shaderInfo, destination, copy):
 	'''
 	Move or copy the compiled shader to the destination directory.
 	'''
-	flatFile = os.path.join(destination, shader_info.flatname)
+	flatFile = os.path.join(destination, shaderInfo.name)
 	if copy:
-		shutil.copyfile(shader_info.pathname, flatFile)
+		shutil.copyfile(shaderInfo.path, flatFile)
 	else:
-		shutil.move(shader_info.pathname, flatFile)
+		shutil.move(shaderInfo.path, flatFile)
 
-def InstallShaders(shaders, destination, copy):
+def _InstallShaders(shaderPaths, destination, copy):
 	'''
 	shaders: A set of compiled shaders.
 	destination: The installation directory.
 	'''
-	shader_dict = OrderedDict()
+	shaderDict = OrderedDict()
 	success = True
 
-	for shader in shaders:
-		if shader.endswith(".oso"):
-			shader_info = _FlattenOSLShader(shader)
+	for shaderPath in shaderPaths:
+		if shaderPath.endswith(".oso"):
+			shaderInfo = _ExtractOSLShader(shaderPath)
 		else:
-			print("ERROR: {} is not a .oso shader.".format(shader))
+			print("ERROR: {} is not a .oso shader.".format(shaderPath))
 			continue
 
-		flatname = shader_info.flatname
-
+		shaderName = shaderInfo.name
+		# # # # # # # # # #
 		# Check if shader is already installed
-		if flatname in shader_dict:
-			print ("ERROR: {}'s flattened name is the same as {}'s name: {}"
-	  			.format(shader, shader_dict[flatname], flatname))
+		if shaderName in shaderDict:
+			print ("ERROR: {}'s shader name is the same as {}'s name: {}"
+	  			.format(shaderPath, shaderDict[shaderName], shaderName))
 			success = False
 			continue
 
-		shader_dict[flatname] = shader
+		shaderDict[shaderName] = shaderPath
 
-		_InstallFile(shader_info, destination, copy)
+		_InstallFile(shaderInfo, destination, copy)
 
 	return success
 
-def _main():
+def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--copy", default = False, action = "store_true", 
 						help = "Copy the compiled shader to the destination "
 							   "directory instead of moving it.")
 	parser.add_argument("destination", help = "Destination directory")
-	parser.add_argument("shaders", nargs = "+", help = "Compiled shaders")
+	parser.add_argument("shaderPaths", nargs = "+", help = "Compiled shader paths from library")
 	
 	args = parser.parse_args()
-	success = InstallShaders(args.shaders, args.destination, args.copy)
+	success = _InstallShaders(args.shaderPaths, args.destination, args.copy)
 
 	return 0 if success else 1
 
 if __name__ == "__main__":
-	sys.exit(_main())
+	sys.exit(main())

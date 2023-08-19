@@ -11,52 +11,52 @@ ifndef RMAN_VERSION
 	$(error RMAN_VERSION needs to be set.)
 endif
 
-SRCDIR ?= $(CURDIR)
-export SRCDIR
+SRC_DIR ?= $(CURDIR)
+export SRC_DIR
 
-SCRIPTDIR ?= $(SRCDIR)/script
-export SCRIPTDIR
+SCRIPT_DIR ?= $(SRC_DIR)/script
+export SCRIPT_DIR
 
-BINDIR ?= $(SRCDIR)/bin
-export BINDIR
+BIN_DIR ?= $(SRC_DIR)/bin
+export BIN_DIR
 
 # Subdirectories to search
-SUBDIRS := ./src/osl
+SUB_DIR := ./src/osl/renderman ./src/osl/general
 
 # Set default target
 .DEFAULT_GOAL = all
 
 # Target time stamps to ignore
-.PHONY : subdirs $(SUBDIRS) clean $(CLEAN_SUBDIRS)
+.PHONY : SUB_DIR $(SUB_DIR) clean $(CLEAN_SUB_DIR)
 
 #-------------------------------------------------------------------------------
 # ALL TARGET
 #-------------------------------------------------------------------------------
-all : $(BINDIR) subdirs
-subdirs : $(BINDIR)
+all : $(BIN_DIR) SUB_DIR
+SUB_DIR : $(BIN_DIR)
 
 # Check for bin directory
-$(BINDIR) :
-	mkdir -p $(BINDIR)
+$(BIN_DIR) :
+	mkdir -p $(BIN_DIR)
 
-subdirs: $(SUBDIRS)
-$(SUBDIRS) : 
+SUB_DIR: $(SUB_DIR)
+$(SUB_DIR) : 
 	$(MAKE) -C $@
 
 #-------------------------------------------------------------------------------
 # CLEAN TARGET
 #-------------------------------------------------------------------------------
 # Cleans the subdirectories
-CLEAN_SUBDIRS = $(addprefix clean_, $(SUBDIRS))
+CLEAN_SUB_DIR = $(addprefix clean_, $(SUB_DIR))
 
-clean_subdirs : $(CLEAN_SUBDIRS)
-$(CLEAN_SUBDIRS):
+clean_SUB_DIR : $(CLEAN_SUB_DIR)
+$(CLEAN_SUB_DIR):
 	$(MAKE) -C $(subst clean_,,$@) clean_local
 
 # Clean the bin directory
-clean : clean_subdirs
+clean : clean_SUB_DIR
 	@ echo "make clean."
-	@ -rm -rf $(SRCDIR)/bin
+	@ -rm -rf $(SRC_DIR)/bin
 
 #-------------------------------------------------------------------------------
 # HELP TARGET
@@ -72,8 +72,8 @@ help :
 	@ echo "Current settings:"
 	@ echo "PIXAR_ROOT: $(PIXAR_ROOT)"
 	@ echo "RMAN_VERSION:  $(RMAN_VERSION)"
-	@ echo "SRCDIR:     $(SRCDIR)"
-	@ echo "SCRIPTDIR:  $(SCRIPTDIR)"
-	@ echo "BINDIR:     $(BINDIR)"
-	@ echo "SUBDIRS:    $(SUBDIRS)"
+	@ echo "SRC_DIR:     $(SRC_DIR)"
+	@ echo "SCRIPT_DIR:  $(SCRIPT_DIR)"
+	@ echo "BIN_DIR:     $(BIN_DIR)"
+	@ echo "SUB_DIR:    $(SUB_DIR)"
 	@ echo "------------------------------------------------------------------------"
