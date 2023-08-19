@@ -36,11 +36,12 @@ Additionally, you can run `make help` or `make clean` on any Makefile to use the
 If you downloaded this repository to `${HOME}/shader_library` then you will want to add something like this to `~/.bash_aliases`:
 ```
 export RMAN_SHADERPATH="${HOME}/shader_library/bin/Renderman-${RMAN_VERSION}"
+export RFM_SITE_PATH=$RMANTREE
 ```
 Again, make sure to run `source ~/.bash_aliases` after writing environment variables to file.
 
 > NOTE: if you are setting the env variables in WSL but need to access them in windows, then add an additional command in `~/.bash_aliases` to share the variables across operating systems:
 ```
-export WSLENV=$WSLENV:PIXAR_ROOT/p:RMAN_VERSION:RMANTREE/p:RMAN_SHADERPATH/p
+export WSLENV=$WSLENV:PIXAR_ROOT/p:RMAN_VERSION:RMANTREE/p:RMAN_SHADERPATH/p:RFM_SITE_PATH/p
 ```
 > To access the variables in windows you must start a wsl terminal and then access windows through `cmd.exe`
