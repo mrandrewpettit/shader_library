@@ -36,7 +36,7 @@ Additionally, you can run `make help` or `make clean` on any Makefile to use the
 If you downloaded this repository to `${HOME}/shader_library` then you will want to add something like this to `~/.bash_aliases`:
 ```
 export RMAN_SHADERPATH="${HOME}/shader_library/bin/Renderman-${RMAN_VERSION}"
-export RFM_SITE_PATH=$RMANTREE
+export RFM_SITE_PATH=$RMAN_SHADERPATH
 ```
 Again, make sure to run `source ~/.bash_aliases` after writing environment variables to file.
 
