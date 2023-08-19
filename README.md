@@ -6,7 +6,7 @@ This repository contains the `osl` source code for shaders I have developed for 
 - `python3`
 - [Renderman 25](https://rmanwiki.pixar.com/display/REN25/RenderMan+25+Documentation)
 
-With alterations to the make system, other applications could still make use of the `osl` source code.
+With alterations to the `make` system, other applications could still make use of the `osl` source code.
 
 ## Quick Start
 1. Download this repository
@@ -30,7 +30,7 @@ Make sure to run `source ~/.bash_aliases` after writing environment variables to
 
 Additionally, you can run `make help` or `make clean` on any Makefile to use their respective functionalities.
 
-5. After building shaders, there is one more environment variable you need to set so the built shaders can be found by RenderMan:
+5. After building the shaders, there is one more environment variable you need to set so the built shaders can be found by RenderMan:
 - RMAN_SHADERPATH
 
 If you downloaded this repository to `${HOME}/shader_library` then you will want to add something like this to `~/.bash_aliases`:
