@@ -7,9 +7,7 @@
 ifndef PIXAR_ROOT
 	$(error PIXAR_ROOT needs to be set.)
 endif
-ifndef RMAN_VERSION
-	$(error RMAN_VERSION needs to be set.)
-endif
+
 ifndef RMANTREE
 	$(error RMANTREE needs to be set.)
 endif
@@ -19,7 +17,7 @@ SRC_DIR ?= ../../..
 SCRIPT_DIR ?= $(SRC_DIR)/script
 BIN_DIR ?= $(SRC_DIR)/bin
 
-INSTALL_DIR := $(BIN_DIR)/General
+INSTALL_DIR := $(BIN_DIR)/general
 
 # Subdirectories to search
 SUBDIRS := utility

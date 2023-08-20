@@ -19,7 +19,7 @@ SRC_DIR ?= ../../..
 SCRIPT_DIR ?= $(SRC_DIR)/script
 BIN_DIR ?= $(SRC_DIR)/bin
 
-INSTALL_DIR := $(BIN_DIR)/Renderman-${RMAN_VERSION}
+INSTALL_DIR := $(BIN_DIR)/renderman-${RMAN_VERSION}
 
 # Subdirectories to search
 SUBDIRS := utility
