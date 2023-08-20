@@ -68,7 +68,7 @@ These IDs will normally suffice, but bugs would appear if on the off chance some
 node IDs 0 - 0x7ffff. To be safe, I have registered a node ID block with maya, and APOSL uses node IDs
 0x0013cb80 - 0x0013cbff. 
 
-- See [Node IDs](./NODE_IDS.md) for a breakdown of this shader libraries node IDs
+- See [Node IDs](./doc/NODE_IDS.md) for a breakdown of this shader libraries node IDs
 - Visit [Autodesk Website](https://mayaid.autodesk.io/) for more clarification on node IDs
 
 ### APOSL Macros 
