@@ -1,0 +1,56 @@
+shader apWorley
+[[
+	string help = "Create Worley and Voronoi patterns. "
+				  "F1 is the distance to the frist closest cell point ",
+	int rfm_nodeid = 1234568,
+	string rfm_classification = "rendernode/apettit/pattern"
+]]
+(
+	float frequency = 1.0
+	[[
+		string label = "Frequency",
+		string help = "This varies the frequency of the noise."
+	]],
+	float Jitter = 1.0
+	[[
+		string label = "Jitter",
+		string help = "Controls how randomly cells' points are placed."
+	]],
+	
+	output float resultF1 = 0.0,
+	output color resultVoronoi = color(0.0)
+)
+{
+	point Q = P;
+	getattribute("builtin", "Po", Q);       // renderMan
+	getattribute("primvar", "__Pref", Q);   // renderMan, unless manually installed
+	Q = transform("common", "object", Q);
+
+	Q /= frequency;
+
+	// find what index sampled point exists in
+	point QIndex = floor(Q);
+
+	resultF1 = 100.0;
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			for(int k = -1; k <= 1; k++)
+			{
+				// find an adjacent jittered index
+				point adjIndex = QIndex + vector(i, j, k);
+				vector offset = noise("cell", adjIndex);
+				adjIndex = adjIndex + (Jitter * offset);
+
+				// calculate pattern when distance to adjacent index is shortest
+				float dist = length(vector(Q - adjIndex));
+				if (dist < resultF1)
+				{
+					resultF1 = dist;
+					resultVoronoi = color(offset);
+				}
+			}
+		}
+	}
+}

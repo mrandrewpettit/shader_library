@@ -1,0 +1,32 @@
+#include "../../lib/Color.h"
+
+shader apColorConstruct
+[[
+    string help = "Create color from split inputs",
+    int rfm_nodeid = 0x0013cb81,
+    string rfm_classification = "rendernode/apettit/utiltiy"
+]]
+(
+	COLOR_SPLIT_INPUTS,
+   
+    COLOR_ALPHA_OUTPUTS
+)
+{
+    if (!useSplitInputs)
+        resultRGBA.RGB = inputRGB;
+    else 
+    {
+        resultRGBA.RGB[0] = inputR;
+        resultRGBA.RGB[1] = inputG;
+        resultRGBA.RGB[2] = inputB;
+    }
+    resultRGBA.A = inputA;
+
+    if (premultiplyOutput)
+    {
+        resultRGBA.isPremultiplied = 0;
+        Premultiply(resultRGBA);
+    }
+
+    COLOR_ALPHA_OUTPUTS_SET;
+} 

@@ -1,0 +1,40 @@
+shader apNoise
+[[
+	string help = "Create a 4D noise pattern.",
+	int rfm_nodeid = 1234567,
+	string rfm_classification = "rendernode/apettit/pattern"
+]]
+(
+	string type = "uperlin"
+	[[
+		int connectable = 0,
+		string label = "Noise Type",
+		string help = "Select the noise type to use.",
+		string widget = "mapper",
+		string options = "Perlin:uperlin|Simplex:usimplex|Cell:cell"
+	]],
+	float frequency = 1.0
+	[[
+		string label = "Frequency",
+		string help = "This varies the frequency of the nosie."
+	]],
+	float variation = 0.0
+	[[
+		string label = "Variation",
+		string help = "This produces a different variant without changing any characteristics."
+	]],
+
+	output color resultRGB = color(0.0),
+	output float resultF = 0.0
+)
+{
+	point Q = P;
+	getattribute("builtin", "Po", Q); // renderMan
+	getattribute("primvar", "__Pref", Q);	// renderMan, unless manually installed
+	Q = transform("common", "object", Q);
+
+	Q /= frequency;
+
+	resultRGB = noise(type, Q, variation); // 4D noise
+	resultF = resultRGB.r;
+}

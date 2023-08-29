@@ -1,0 +1,18 @@
+shader apManifoldWarp
+[[
+	string help = "Simple vector manifold warp to distort future patterns.",
+	int rfm_nodeid = 1234569,
+	string rfm_classification = "rendernode/apettit/manifold"
+]]
+(
+	point InputManifold = point(0.0),
+	vector warpVector = vector(0.0),
+	int expandRange = 0,
+	float magnitude = 0.5,
+
+	output point out = point(0.0)
+)
+{
+	vector dir = select(warpVector, 2 * warpVector - vector(1), ExpandRange);
+	out = In + dir * magnitude;
+}

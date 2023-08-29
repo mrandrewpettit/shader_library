@@ -1,0 +1,45 @@
+#include "../../lib/Color.h"
+
+shader apColorMix_1
+[[
+    string help = "Mix color A and color B given a float mix value",
+    int rfm_nodeid = 0x0013cb83,
+    string rfm_classification = "rendernode/apettit/utility"
+]]
+(
+    COLOR_ALPHA_TAG_INPUTS(A),
+    COLOR_ALPHA_TAG_INPUTS(B),
+
+	string alphaMixType = "Mix"
+	[[
+		string label = "Alpha Mix",
+		int connectable = 0,
+		string widget = "popup",
+		string options = "Mix|A|B"
+
+	]],
+	float mixVal = 0.5 [[ string label = "Mix Value" ]],
+
+    COLOR_ALPHA_OUTPUTS
+)
+{
+    COLOR_ALPHA_TAG_INPUTS_GET(A);
+    COLOR_ALPHA_TAG_INPUTS_GET(B);
+    
+    // check if you need to compute color mix
+    if (mixVal == 0.0)
+        resultRGBA.RGB = inputRGBA_A.RGB;
+    else if (mixVal == 1.0)
+        resultRGBA.RGB = inputRGBA_B.RGB;
+    else
+        resultRGBA.RGB = mix(inputRGBA_A.RGB, inputRGBA_B.RGB, mixVal);
+    
+    if (alphaMixType == "Mix")
+        resultRGBA.A = mix(inputA_A, inputA_B, mixVal);
+    else if (alphaMixType == "A")
+        resultRGBA.A = inputA_A;
+    else if (alphaMixType == "B")
+        resultRGBA.A = inputA_B;
+
+    COLOR_ALPHA_OUTPUTS_SET;
+}

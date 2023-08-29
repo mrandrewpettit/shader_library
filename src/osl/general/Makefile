@@ -20,7 +20,7 @@ BIN_DIR ?= $(SRC_DIR)/bin
 INSTALL_DIR := $(BIN_DIR)/general
 
 # Subdirectories to search
-SUBDIRS := utility
+SUBDIRS := pattern texture trace utility
 
 # Set default target
 .DEFAULT_GOAL = all

@@ -1,0 +1,78 @@
+// C:\Users\andre\Desktop\TMP_brushstrokes\mario.tx
+color LoadTexture(string filename, vector pt, output float alpha)
+{
+    color RGB = texture(filename, pt[0], (1.0 - pt[1]), "alpha", alpha, "wrap", "clamp");
+    int channels = 3;
+    gettextureinfo(filename, "channels", channels);
+    if (channels <= 3)
+	alpha = 1.0;
+    return RGB;
+}
+
+shader TexBomb2d
+(
+    color inputColor = color(1.0, 0.5, 0.0),
+    vector uv = vector(u, v, 0),
+    float frequency = 4.0,
+
+    string filename = "",
+    int searchRadius = 2,
+    vector posJitterAmp = vector(0.0),
+
+    output color resultRGB = color(0.0)
+    // output float alpha = 1.0
+)
+{
+	resultRGB = inputColor;
+
+	// generate cells
+    vector uvFreq = uv * frequency; 
+    vector cell = floor(uvFreq);
+
+	// generate UV location in cell
+    vector cellSpacePos = uvFreq - cell;
+
+	//
+    for (int i = -searchRadius; i <= searchRadius; i++)
+    {
+        for (int j = -searchRadius; j <= searchRadius; j++)
+        {
+            // get an adjacent cell within the searchRadius to sample
+			point sampleCell = point(cell[0] - i, cell[1] - j, 1.0);
+
+            // calculate jitter through cell noise to get predictable and seemingly random noise
+            point jitter = noise("cell", sampleCell, 0); 
+            jitter -= vector(0.5, 0.5, 0.0); // shift generated cell noise from [0, 1] to [-0.5, 0.5]
+            jitter *= vector(posJitterAmp[0], posJitterAmp[1], 1.0); // jitter amplitude
+
+			// get point to load texture at by returning to 
+            point loadPt = point(cellSpacePos[0] - i, cellSpacePos[1] - j, 0) + jitter;
+
+			if (loadPt[0] >= 0.0 && loadPt[0] < 1.0 && loadPt[1] >= 0.0 && loadPt[1] < 1.0)
+			{
+				float texA = 1.0;
+				color texRGB = LoadTexture(filename, loadPt, texA);
+
+				if (texA > 0.0)
+				{
+					// point clr = noise("cell", sampleCell, 2); // Color randomness
+					// point arr = noise("cell", sampleCell, 3); // Alpha randomness
+
+					// vector hsvTweak = mix(hsv_min, hsv_max, clr);
+					// float ar = mix(alpha_min, alpha_max, arr[0]);
+
+					// color hsv = transformc("rgb", "hsv", rgb);
+					// hsv[0] += hsvTweak[0]; // Offset the hue
+					// hsv[1] *= hsvTweak[1]; // Scale the saturation
+					// hsv[2] *= hsvTweak[2]; // Scale the value
+					// rgb = transformc("hsv", "rgb", hsv);	
+
+					// Apply alpha randomness
+					// rgb *= ar; a *= ar;
+				}
+
+				resultRGB = (resultRGB * (1.0 - texA)) + texRGB;
+			}
+        }
+    }
+}

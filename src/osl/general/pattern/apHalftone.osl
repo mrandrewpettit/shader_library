@@ -1,0 +1,76 @@
+float SafeDivide(float num, float den)
+{
+    return (den == 0.0) ? 0.0 : (num / den);
+}
+
+float RemapFloat(float inputF,
+                 float inputMin, float inputMax,
+                 float outputMin, float outputMax)
+{
+    float scale = SafeDivide((outputMax - outputMin), (inputMax - inputMin));
+    return outputMin + (clamp(inputF, inputMin, inputMax) - inputMin) * scale;
+}
+
+shader apHalftone
+(
+	//float m_ambient = 0.2,
+	float m_diffuse = 1.0,
+	//float m_specular = 0.4,
+	//int m_gls = 25,
+	color light_color = color(1.0),
+	color albedo = color(1),
+	vector light_vector = vector(1, 1, 0),
+
+	color highColor = color(1, 0, 0),
+	color midColor = color(0, 1, 0),
+	color lowColor = color(0, 0, 1),
+
+	float lowToneBreak = 0.3333333,
+	float highToneBreak = 0.6666666,
+	float falloff = 0.0,
+
+	output color resultRGB = color(0.0)
+)
+{
+	normal norm = N;
+	getattribute("builtin", "No", norm);
+	transform("common", "object", norm);
+
+	//color ambient = light_color * (m_ambient * albedo);
+	color diff = m_diffuse * light_color * albedo * dot(normalize(norm), normalize(light_vector));
+
+	float ramp = RemapFloat(diff.r, -1, 1, 0, 1);
+
+    /*color colorarray[6]= {
+    color(0.0),
+    color(1.0, 0.0, 0.0),
+    color(0.0, 1.0, 0.0),
+    color(0.0, 0.0, 1.0),
+    color(0.0),
+    color(0.0)
+    };
+
+	// linear ignores the first and last
+	// constatn ignoes the first and last two
+	resultRGB = spline("constant", ramp, colorarray);*/
+
+	/*if (step(color(highToneBreak), ramp))
+	{
+		resultRGB = color(1, 0, 0);
+	}
+	else if (step(color(lowToneBreak), ramp))
+	{
+		resultRGB = color(0, 1, 0);
+	}
+	else
+	{
+	resultRGB = color(0, 0, 1);
+	}*/
+
+	float highMask = linearstep((highToneBreak - falloff), (highToneBreak + falloff), ramp);
+	float midMask = linearstep((lowToneBreak - falloff), (lowToneBreak + falloff), ramp);
+	resultRGB = mix(lowColor, midColor, midMask);
+	//resultRGB = mix(resultRGB, highColor, highMask);
+
+	// resultRGB = ramp;
+}

@@ -1,0 +1,91 @@
+shader apOcclusion
+[[
+	string help = "Calculated Ambient Occlusion by tracing rays from the surface in the normal direction.",
+	int rfm_nodeid = 1234570,
+	string rfm_classification = "rendernode/apettit/trace"
+]]
+(
+	string traceSet = ""
+	[[
+		string help = "Sets the objects that the rays can intersect. If blank, it can hit all objects."
+	]],
+
+	int samples = 16
+	[[
+		string help = "The number of traces rays for each shaded point."
+	]],
+	float maxDist = 1.0
+	[[
+		string help = "The distance each ray can travel before it is considered a miss."
+	]],
+
+	output float occlusion = 0.0,
+	output float invertOcclusion = 0.0)
+{
+	// Compute orthonormal Tangent (TN) and Bi-tangent (BN) vectors
+	// Duff, T. et. al. 2017
+ 	// Building an Orthonormal Basis, Revisited
+ 	// Journal of Computer Graphics Techniques Vol. 6, No. 1
+	float signz = select(-1, 1, N.z >= 0.0);
+	float a = -1.0 / (signz + N.z);
+	float b = N.x * N.y * a;
+	vector TN = vector(1.0 + signz * N.x * N.x * a, signz * b, -signz * N.x);
+	vector BN = vector(b, signz + N.y * N.y * a, -N.y);
+
+	// Trace Bias: a small offset from the ray origin that's used to ensure the 
+	// ray doesn't intersect the surface it originates from.
+	// It is automatically determined by RenderMan
+	float bias = 0.0001;
+	int autobias = 0;
+	getattribute("trace:autobias", autobias);
+	if (autobias)
+	{
+		getattribute("builtin", "biasR", bias);
+	}
+	else
+	{
+		getattribute("trace:bias", bias);
+	}
+
+	// Trace Set
+	string _traceSet = traceSet;
+	if("*" == traceSet) // only the object being shaded is included
+	{
+		getattribute("identifier:name", _traceSet);
+	}
+
+	// Trace
+	float hits = 0;
+	float hitdists = 0;
+
+	for (int i = 0; i < samples; i++)
+	{
+		// Generate sample direction
+		vector dir;
+		point xi = hashnoise(P, float(i)); // ξ : [0,1)
+
+		float phi = xi.x * M_2PI; // 0 ≤ φ < 2π
+		float sinphi, cosphi;
+		sincos(phi, sinphi, cosphi);
+
+		float z = xi.y;
+		float sintheta = sqrt(1.0 - (z * z)); // 0 ≤ θ < π
+
+		float x = sintheta * cosphi;
+		float y = sintheta * sinphi;
+
+		dir = (x * TN) + (y * BN) + (z * N);
+
+		// Trace ray
+		int hit = trace(P, dir, "mindist", bias, "maxdist", maxDist, "traceset", _traceSet);
+
+		hits += hit;
+
+		float hitdist;
+		getmessage("trace", "hitdist", hitdist);
+		hitdists += hitdist;
+	}
+
+	occlusion = hits / samples;
+	invertOcclusion = 1.0 - occlusion;
+}

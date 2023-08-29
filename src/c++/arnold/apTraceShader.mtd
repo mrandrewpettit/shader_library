@@ -1,0 +1,19 @@
+# apTrace			0x00070006
+
+[node apTrace]
+	maya.name		STRING	"apTrace"
+	maya.id			INT	0x00070006
+	maya.classification	STRING	"shader/surface"
+	maya.output_name	STRING	"outColor"
+	maya.output_shortname	STRING	"out"
+
+	[attr p_position]
+		maya.name	STRING "position"
+	[attr p_direction]
+		maya.name	STRING "direction"
+	[attr p_opacity]
+		maya.name	STRING "opacity"
+	[attr p_selfTraceset]
+		maya.name	STRING "selfTraceset"
+	[attr p_breakEdge]
+		maya.name	STRING "breakEdge"
