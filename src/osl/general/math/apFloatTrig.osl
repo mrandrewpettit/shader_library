@@ -1,0 +1,38 @@
+#include "../../lib/Float.h"
+#include "../../lib/Math.h"
+
+shader apFloatTrig
+[[
+    string help = "Apply trigonometric function to a float value.",
+    int rfm_nodeid = 0x0013cb91,
+    string rfm_classification = "rendernode/apettit/general/math"
+]]
+(
+	float inputAngle = 0.0 [[ string label = "Angle" ]],
+	string angleUnit = "radians"
+	[[
+		string label = "Angle Unit",
+		string widget = "popup",
+		string options = "radians|degrees",
+		int connectable = 0
+	]],
+	string trigFunc = "sin"
+	[[
+		string label = "Function",
+		string widget = "popup",
+		string options = "sin|cos|tan",
+		int connectable = 0
+	]],
+
+    FLOAT_OUTPUTS
+)
+{
+    if (trigFunc == "sin")
+        resultF = sin(AngleAsUnit(inputAngle, angleUnit));
+    else if (trigFunc == "cos")
+        resultF = cos(AngleAsUnit(inputAngle, angleUnit));
+    else if (trigFunc == "tan")
+        resultF = tan(AngleAsUnit(inputAngle, angleUnit));
+
+    FLOAT_OUTPUTS_SET;
+}

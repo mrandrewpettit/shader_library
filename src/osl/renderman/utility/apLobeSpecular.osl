@@ -1,0 +1,42 @@
+#include "../../lib/Color.h"
+#include "../../lib/Variation.h"
+
+shader apLobeSpecular
+[[
+    string help = "apettit's prefered inputs for pxrSurface's specular lobe",
+    int rfm_nodeid = 0x0013cb94,
+    string rfm_classification = "rendernode/apettit/renderman/utility"
+]]
+(
+	float inputKFace = 1.0 [[ string label = "KFace" ]],
+	float inputKEdge = 1.0 [[ string label = "KEdge" ]],
+	float roughness = 0.2 [[ string label = "Roughness" ]],
+	color inputTint = COLOR_ONE [[ string label = "Tint" ]],
+
+    VARIATION_INPUTS(Specular),
+	int kEdgeVar = 0
+	[[
+		string page = "Specular Variation",
+		string label = "Affect Edge",
+		string help = "Have variation affect the edge value as well",
+		int connectable = 0
+	]],
+    VARIATION_INPUTS(Roughness),
+
+    output color resultKFace = color(0.0),
+    output color resultKEdge = color(0.0),
+    output float resultRoughness = 0.0
+)
+{
+    float kFace = inputKFace;
+    float kEdge = inputKEdge;
+
+    kFace = VARIATION_SET(inputKFace, Specular);
+
+    if (kEdgeVar)
+        kEdge = VARIATION_SET(inputKEdge, Specular);
+
+    resultKFace = color(kFace) * inputTint;
+    resultKEdge = color(kEdge) * inputTint;
+    resultRoughness = VARIATION_SET(roughness, Roughness);
+}

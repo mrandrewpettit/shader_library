@@ -1,3 +1,6 @@
+#ifndef COLOR_H
+#define COLOR_H
+
 ////////////////////////////////////////////////////////////////////////////////
 // Structs
 ////////////////////////////////////////////////////////////////////////////////
@@ -16,16 +19,18 @@ struct colorAlpha{
 #define G_DEF 0.0
 #define B_DEF 1.0
 #define ALPHA_DEF 1.0
+#define COLOR_ZERO color(0.0)
+#define COLOR_ONE color(1.0)
 #define PREMULT_DEF 1
 #define COLOR_DEF color(R_DEF, G_DEF, B_DEF)
 #define COLORALPHA_DEF {COLOR_DEF, ALPHA_DEF, PREMULT_DEF}
 #define COLORALPHA_ZERO {color(0.0), 0.0, 0}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Output Macros
+// Input Macros
 ////////////////////////////////////////////////////////////////////////////////
 
-# define COLOR_SPLIT_INPUTS 								 							\
+#define COLOR_SPLIT_INPUTS 								 							\
     color inputRGB = COLOR_DEF [[ string label = "Color" ]], 							\
     float inputA = ALPHA_DEF [[ string label = "A" ]], 		 							\
     int useSplitInputs = 0 									 							\
@@ -94,6 +99,17 @@ struct colorAlpha{
 // Output Macros
 ////////////////////////////////////////////////////////////////////////////////
 
+#define COLOR_OUTPUTS                 \
+	output color resultRGB = COLOR_ZERO, \
+	output float resultR = 0.0, \
+	output float resultG = 0.0, \
+	output float resultB = 0.0
+
+#define COLOR_OUTPUTS_SET   \
+    resultR = resultRGB[0]; \
+    resultG = resultRGB[1]; \
+    resultB = resultRGB[2]
+
 #define COLOR_ALPHA_OUTPUTS                         \
 	output colorAlpha resultRGBA = COLORALPHA_ZERO, \
 	output color resultRGB = color(0.0), 			\
@@ -130,3 +146,5 @@ void Unpremultiply(output colorAlpha RGBA)
         RGBA.isPremultiplied = 0;
     }
 }
+
+#endif // COLOR_H

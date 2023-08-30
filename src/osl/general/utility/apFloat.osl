@@ -1,0 +1,18 @@
+#include "../../lib/Float.h"
+
+shader apFloat
+[[
+    string help = "Simple float pass-through operation",
+    int rfm_nodeid = 0x0013cb92,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_INPUTS,
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = inputF;
+    FLOAT_OUTPUTS_SET;
+
+}

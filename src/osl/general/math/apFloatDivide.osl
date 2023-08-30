@@ -1,0 +1,20 @@
+#include "../../lib/Float.h"
+#include "../../lib/Math.h"
+
+shader apFloatDivide
+[[
+    string help = "Divide float A and float B. If Input B is 0.0 then returns 0.0",
+    int rfm_nodeid = 0x0013cb88,
+    string rfm_classification = "rendernode/apettit/general/math"
+]]
+(
+    FLOAT_TAG_INPUTS(A),
+    FLOAT_TAG_INPUTS(B),
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = SafeDivide(inputF_A, inputF_B); 
+
+    FLOAT_OUTPUTS_SET;
+}

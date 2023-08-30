@@ -3,8 +3,8 @@
 shader apColorMix_1
 [[
     string help = "Mix color A and color B given a float mix value",
-    int rfm_nodeid = 0x0013cb83,
-    string rfm_classification = "rendernode/apettit/utility"
+    int rfm_nodeid = 0x0013cb82,
+    string rfm_classification = "rendernode/apettit/general/utility"
 ]]
 (
     COLOR_ALPHA_TAG_INPUTS(A),

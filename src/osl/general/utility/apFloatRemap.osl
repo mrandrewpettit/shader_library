@@ -1,0 +1,25 @@
+#include "../../lib/Float.h"
+#include "../../lib/Math.h"
+
+shader apFloatRemap
+[[
+    string help = "Remap float operation",
+    int rfm_nodeid = 0x0013cb8e,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_INPUTS,
+
+	float inputMin = 0.0 [[ string label = "Input Min" ]],
+	float inputMax = 1.0 [[ string label = "Input Max" ]],
+	float outputMin = 0.0 [[ string label = "Output Min" ]],
+	float outputMax = 1.0 [[ string label = "Output Max" ]],
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = RemapFloat(inputF, 
+                         inputMin, inputMax,
+                         outputMin, outputMax);
+    FLOAT_OUTPUTS_SET;
+} 

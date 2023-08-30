@@ -2,8 +2,8 @@ shader apWorley
 [[
 	string help = "Create Worley and Voronoi patterns. "
 				  "F1 is the distance to the frist closest cell point ",
-	int rfm_nodeid = 1234568,
-	string rfm_classification = "rendernode/apettit/pattern"
+	int rfm_nodeid = 0x0013cb84,
+	string rfm_classification = "rendernode/apettit/general/pattern"
 ]]
 (
 	float frequency = 1.0
@@ -18,7 +18,8 @@ shader apWorley
 	]],
 	
 	output float resultF1 = 0.0,
-	output color resultVoronoi = color(0.0)
+	output color resultVoronoi = color(0.0),
+	output color resultPosition = color(0.0)
 )
 {
 	point Q = P;
@@ -49,6 +50,7 @@ shader apWorley
 				{
 					resultF1 = dist;
 					resultVoronoi = color(offset);
+					resultPosition = normalize(adjIndex);
 				}
 			}
 		}

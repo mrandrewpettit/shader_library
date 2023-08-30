@@ -1,4 +1,4 @@
-// C:\Users\andre\Desktop\TMP_brushstrokes\mario.tx
+// C:\Users\andre\Desktop\mario.tx
 color LoadTexture(string filename, vector pt, output float alpha)
 {
     color RGB = texture(filename, pt[0], (1.0 - pt[1]), "alpha", alpha, "wrap", "clamp");
@@ -9,7 +9,12 @@ color LoadTexture(string filename, vector pt, output float alpha)
     return RGB;
 }
 
-shader TexBomb2d
+shader apTextureBomb2D
+[[
+	string help = "Bomb a texture across a 2D manifold.",
+	int rfm_nodeid = 0x0013cb95,
+	string rfm_classification = "rendernode/apettit/general/texture"
+]]
 (
     color inputColor = color(1.0, 0.5, 0.0),
     vector uv = vector(u, v, 0),
@@ -18,6 +23,14 @@ shader TexBomb2d
     string filename = "",
     int searchRadius = 2,
     vector posJitterAmp = vector(0.0),
+
+	float randProb = 0.5,
+	float scaleMin = 0,
+	float scaleMax = 1,
+	float rotMin = 0,
+	float rotMax = 360,
+	float HSVMax = 1.0,
+	float HSVMin = 1.0,
 
     output color resultRGB = color(0.0)
     // output float alpha = 1.0
@@ -38,7 +51,7 @@ shader TexBomb2d
         for (int j = -searchRadius; j <= searchRadius; j++)
         {
             // get an adjacent cell within the searchRadius to sample
-			point sampleCell = point(cell[0] - i, cell[1] - j, 1.0);
+			point sampleCell = point(cell[0] + i, cell[1] + j, 1.0);
 
             // calculate jitter through cell noise to get predictable and seemingly random noise
             point jitter = noise("cell", sampleCell, 0); 
@@ -48,27 +61,38 @@ shader TexBomb2d
 			// get point to load texture at by returning to 
             point loadPt = point(cellSpacePos[0] - i, cellSpacePos[1] - j, 0) + jitter;
 
+			// randomize scale and rotation
+			if (jitter[2] < randProb)
+			{
+				point randTransformSeed = noise("cell", sampleCell, 2);
+
+				float scale = mix(scaleMin, scaleMax, randTransformSeed[0]);
+
+				float rot = mix(rotMin, rotMax, randTransformSeed[2]);
+
+				loadPt -= 0.5;
+				loadPt  = rotate(loadPt, radians(rot), point(0,0,0), vector(0,0,1));
+				loadPt /= vector(scale, scale, 1.0);
+				loadPt += 0.5;
+			}
+
+			// get texture
 			if (loadPt[0] >= 0.0 && loadPt[0] < 1.0 && loadPt[1] >= 0.0 && loadPt[1] < 1.0)
 			{
 				float texA = 1.0;
 				color texRGB = LoadTexture(filename, loadPt, texA);
 
+				// randomize color
 				if (texA > 0.0)
 				{
-					// point clr = noise("cell", sampleCell, 2); // Color randomness
-					// point arr = noise("cell", sampleCell, 3); // Alpha randomness
+					point randColorSeed = noise("cell", sampleCell, 2); // Color randomness
+					vector randColor = mix(HSVMin, HSVMax, randColorSeed);
 
-					// vector hsvTweak = mix(hsv_min, hsv_max, clr);
-					// float ar = mix(alpha_min, alpha_max, arr[0]);
-
-					// color hsv = transformc("rgb", "hsv", rgb);
-					// hsv[0] += hsvTweak[0]; // Offset the hue
-					// hsv[1] *= hsvTweak[1]; // Scale the saturation
-					// hsv[2] *= hsvTweak[2]; // Scale the value
-					// rgb = transformc("hsv", "rgb", hsv);	
-
-					// Apply alpha randomness
-					// rgb *= ar; a *= ar;
+					color texHSV = transformc("rgb", "hsv", texRGB);
+					texHSV[0] += randColor[0];
+					texHSV[1] *= randColor[1];
+					texHSV[2] *= randColor[2];
+					texRGB = transformc("hsv", "rgb", texHSV);	
 				}
 
 				resultRGB = (resultRGB * (1.0 - texA)) + texRGB;

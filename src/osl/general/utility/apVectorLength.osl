@@ -1,0 +1,18 @@
+#include "../../lib/Vector.h"
+#include "../../lib/Float.h"
+
+shader apVectorLength
+[[
+    string help = "Return length of a vector",
+    int rfm_nodeid = 0x0013cb93,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    VECTOR_INPUTS,
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = length(inputV);
+    FLOAT_OUTPUTS_SET;
+} 

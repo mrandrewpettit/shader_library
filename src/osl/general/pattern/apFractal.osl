@@ -1,8 +1,8 @@
 shader apFractal
 [[
 	string help = "Create a fractal from noise patterns.",
-	int rfm_nodeid = 1234580,
-	string rfm_classification = "rendernode/renderman/pattern/apettit"
+	int rfm_nodeid = 0x0013cb80,
+	string rfm_classification = "rendernode/apettit/general/pattern"
 ]]
 (
 	string type = "uperlin"

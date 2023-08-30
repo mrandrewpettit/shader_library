@@ -12,6 +12,11 @@ float RemapFloat(float inputF,
 }
 
 shader apHalftone
+[[
+	string help = "Calculated Ambient Occlusion by tracing rays from the surface in the normal direction.",
+	int rfm_nodeid = 1234567,
+	string rfm_classification = "rendernode/apettit/general/trace"
+]]
 (
 	//float m_ambient = 0.2,
 	float m_diffuse = 1.0,
@@ -19,19 +24,32 @@ shader apHalftone
 	//int m_gls = 25,
 	color light_color = color(1.0),
 	color albedo = color(1),
-	vector light_vector = vector(1, 1, 0),
+	vector light_vector = vector(1, 1, 0.25),
 
-	color highColor = color(1, 0, 0),
-	color midColor = color(0, 1, 0),
-	color lowColor = color(0, 0, 1),
+	float highFalloff = 0.2,
+	int dotFreq = 50,
+	float dotSizeMax = 2.5,
 
-	float lowToneBreak = 0.3333333,
-	float highToneBreak = 0.6666666,
-	float falloff = 0.0,
+	float lowFalloff = 0.025,
+	int hatchingFreq = 65,
+	float hatchingOffset = 0.15,
+
+	color highColor = color(0.4, 0.5, 0.6),
+	float highPresence = 0.8,
+	color midColor = color(0.015, 0.25, 0.4),
+	color lowColor = color(0, 0.001, 0.066),
+	float lowPresence = 0.95,
+	color castShadowColor = color(0.014, 0.014, 0.15),
+	float castShadowPresence = 0.15,
+
+
+	float lowToneBreak = 0.3,
+	float highToneBreak = 0.925,
 
 	output color resultRGB = color(0.0)
 )
 {
+	// high and mid masks
 	normal norm = N;
 	getattribute("builtin", "No", norm);
 	transform("common", "object", norm);
@@ -41,36 +59,66 @@ shader apHalftone
 
 	float ramp = RemapFloat(diff.r, -1, 1, 0, 1);
 
-    /*color colorarray[6]= {
-    color(0.0),
-    color(1.0, 0.0, 0.0),
-    color(0.0, 1.0, 0.0),
-    color(0.0, 0.0, 1.0),
-    color(0.0),
-    color(0.0)
-    };
+	float highMask = linearstep((highToneBreak - highFalloff), (highToneBreak + highFalloff), ramp);
+	float lowMask = 1 - linearstep((lowToneBreak - lowFalloff - hatchingOffset), (lowToneBreak + lowFalloff), ramp);
+	float lowMaskVar = 1 - linearstep((lowToneBreak - lowFalloff), (lowToneBreak + lowFalloff + hatchingOffset), ramp);
 
-	// linear ignores the first and last
-	// constatn ignoes the first and last two
-	resultRGB = spline("constant", ramp, colorarray);*/
-
-	/*if (step(color(highToneBreak), ramp))
+	// cast shadow mask
+	float bias = 0.0001;
+	int autobias = 0;
+	float castShadowMask = 0.0;
+	getattribute("trace:autobias", autobias);
+	if (autobias)
 	{
-		resultRGB = color(1, 0, 0);
-	}
-	else if (step(color(lowToneBreak), ramp))
-	{
-		resultRGB = color(0, 1, 0);
+		getattribute("builtin", "biasR", bias);
 	}
 	else
 	{
-	resultRGB = color(0, 0, 1);
-	}*/
+		getattribute("trace:bias", bias);
+	}
 
-	float highMask = linearstep((highToneBreak - falloff), (highToneBreak + falloff), ramp);
-	float midMask = linearstep((lowToneBreak - falloff), (lowToneBreak + falloff), ramp);
-	resultRGB = mix(lowColor, midColor, midMask);
-	//resultRGB = mix(resultRGB, highColor, highMask);
+	if (trace(P, light_vector, "mindist", bias))
+	{
+		castShadowMask = 1.0;
+		highMask = 0;
+	}
+	castShadowMask = castShadowMask * castShadowPresence;
 
-	// resultRGB = ramp;
+	// halftone and hatching textures
+	point Pspace = transform("common", "screen", P);
+	// halftone texture
+	float x = Pspace[0];
+	float y = Pspace[1];
+
+	float xx = mod(x * dotFreq, 1);  //number of dots
+	float yy = mod(y * dotFreq, 1); // number of dots
+
+	point newDot = point(xx, yy, 0);
+	float dist = distance(point(0.5, 0.5, 0), newDot); // centers circles
+
+	// merge halfton texture with highMask
+	float highFinal = RemapFloat(highMask, 0, 1, 0, dotSizeMax); // change size of circles
+	highFinal = 1 - smoothstep((highFinal / 2), (highMask / 2), dist);
+	highFinal *= highPresence;
+
+	// hatching texture
+	vector rotSpace  = rotate(Pspace, radians(45), point(0,0,0), vector(0,0,1));
+	x = rotSpace[0];
+	xx = mod(x * hatchingFreq, 1);
+	float stripes = 0;
+	if (xx > 0.5)
+		stripes = 1;
+
+	// merge hatching texture with lowMask
+	float lowFinal = lowMask * stripes;
+	lowFinal += lowMaskVar * (1 - stripes);
+	lowFinal *= lowPresence;
+
+	// merge hatching texture with castShadowMask
+	float castShadowFinal = castShadowMask * (1 - stripes);
+
+	resultRGB = midColor;
+	resultRGB = mix(resultRGB, highColor, highFinal);
+	resultRGB = mix(resultRGB, lowColor, lowFinal);
+	resultRGB = mix(resultRGB, castShadowColor, castShadowFinal);
 }

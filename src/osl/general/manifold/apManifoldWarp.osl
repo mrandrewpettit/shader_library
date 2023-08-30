@@ -2,7 +2,7 @@ shader apManifoldWarp
 [[
 	string help = "Simple vector manifold warp to distort future patterns.",
 	int rfm_nodeid = 1234569,
-	string rfm_classification = "rendernode/apettit/manifold"
+	string rfm_classification = "rendernode/apettit/general/manifold"
 ]]
 (
 	point InputManifold = point(0.0),

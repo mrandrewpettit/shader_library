@@ -1,0 +1,18 @@
+#include "../../lib/Float.h"
+
+shader apFloatMax
+[[
+    string help = "Returns max value between float A and float B",
+    int rfm_nodeid = 0x0013cb89,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_TAG_INPUTS(A),
+    FLOAT_TAG_INPUTS(B),
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = max(inputF_A, inputF_B);
+    FLOAT_OUTPUTS_SET;
+}

@@ -1,0 +1,18 @@
+#include "../../lib/Float.h"
+
+shader apFloatMin
+[[
+    string help = "Returns min value between float A and float B",
+    int rfm_nodeid = 0x0013cb8a,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_TAG_INPUTS(A),
+    FLOAT_TAG_INPUTS(B),
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = min(inputF_A, inputF_B);
+    FLOAT_OUTPUTS_SET;
+}

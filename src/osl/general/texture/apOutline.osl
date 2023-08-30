@@ -1,0 +1,60 @@
+shader apOutline
+(
+	float width = 0.01,
+	float dis = 3,
+	float nscale = 0,
+	float namount = 0,
+
+	output color resultRGB = color(0.0)
+)
+{
+	point op = point(0.0);
+	point op1 = point(0.0);
+	for (int i = -1; i < 2; i++)
+	{
+		if(resultRGB[0] > 0)
+			break;
+
+		point cam = P - I;
+
+		vector width2 = i * N * width + (noise("perlin", P * nscale) * namount);
+		point cam2 = P + width2 - I;
+		point op = point(0.0);
+		point op2 = point(0.0);
+
+		int hit = trace(cam, normalize(I));
+
+		if (hit)
+		{
+			resultRGB = color(1.0, 0.0, 0.0);
+			getmessage("trace", "P", op);
+			op = transform("world", op);
+			string name = "nogo";
+			getmessage("trace", "geom:name", name);
+			int hit2 = trace(cam2, normalize(I));
+			resultRGB = color(1.0, 0.0, 0.0);
+
+			if (hit2)
+			{
+				getmessage("trace", "P", op1);
+				op1 = transform("world", op1);
+				string name2;
+
+				getmessage("trace", "geom:name", name2);
+
+				if (name != name2)
+				{
+					resultRGB = 1;
+					break;
+				}
+
+				if (name == name2)
+					resultRGB = 0;
+
+				if (distance(op, op1) > dis)
+					resultRGB = color(1.0, 0.0, 0.0);
+			}
+		}
+		i++;
+	}
+}

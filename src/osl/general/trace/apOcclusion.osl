@@ -2,7 +2,7 @@ shader apOcclusion
 [[
 	string help = "Calculated Ambient Occlusion by tracing rays from the surface in the normal direction.",
 	int rfm_nodeid = 1234570,
-	string rfm_classification = "rendernode/apettit/trace"
+	string rfm_classification = "rendernode/apettit/general/trace"
 ]]
 (
 	string traceSet = ""

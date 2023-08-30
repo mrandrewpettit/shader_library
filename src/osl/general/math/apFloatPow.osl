@@ -1,0 +1,28 @@
+#include "../../lib/Float.h"
+
+shader apFloatPower
+[[
+    string help = "Float A to the power of float B",
+    int rfm_nodeid = 0x0013cb8d,
+    string rfm_classification = "rendernode/apettit/general/math"
+]]
+(
+    FLOAT_TAG_INPUTS(A),
+    FLOAT_TAG_INPUTS(B),
+    int clampResult = 1
+	[[
+		string label = "Clamp Result",
+		string help = "Clamp maximum to 1.0",
+		int connectable = 0
+	]],
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = pow(inputF_A, inputF_B);
+
+    if (clampResult)
+        resultF = min(1.0, resultF);
+
+    FLOAT_OUTPUTS_SET;
+}

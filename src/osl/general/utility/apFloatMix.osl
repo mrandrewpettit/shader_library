@@ -1,0 +1,19 @@
+#include "../../lib/Float.h"
+
+shader apFloatMix
+[[
+    string help = "Mix float A and float B given a float mix value",
+    int rfm_nodeid = 0x0013cb8b,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_TAG_INPUTS(A),
+    FLOAT_TAG_INPUTS(B),
+	float mixVal = 0.5 [[ string label = "Mix Value" ]],
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = mix(inputF_A, inputF_B, mixVal);
+    FLOAT_OUTPUTS_SET;
+}

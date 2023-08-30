@@ -1,0 +1,42 @@
+#include "../../lib/Float.h"
+
+shader apFloatStep
+[[
+    string help = "Perform step based function on float values",
+    int rfm_nodeid = 0x0013cb8f,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+	float inputF = 0.0 [[ string label = "Input F" ]],
+	float stepPattern = 0.5 [[ string label = "Step Pattern" ]],
+
+	string stepType =  "Black to Pattern"
+	[[
+		string label = "Step Type",
+		string popup = "Black to Pattern|Black to Pattern (Multiply)|Pattern to White|Pattern to White (Screen)|Input|Step Pattern"
+	]],
+
+    FLOAT_OUTPUTS
+)
+{
+    if (stepType == "Black to Pattern")
+        resultF = smoothstep((1.0 - stepPattern), 1.0, inputF);
+    else if (stepType == "Black to Pattern (Multiply)")
+        resultF = smoothstep((1.0 - stepPattern), 1.0, inputF) * stepPattern;
+    else if (stepType == "Pattern to White")
+        resultF = smoothstep(0.0, (1.0 - stepPattern), inputF);
+    else if (stepType == "Pattern to White (Screen)")
+    {
+        resultF = smoothstep(0.0, (1.0 - stepPattern), inputF);
+        resultF = 1.0 - ((1.0 - resultF) * (1.0 - stepPattern));
+    }
+    else if (stepType == "Input")
+        resultF = inputF;
+    else if (stepType == "Step Pattern")
+        resultF = stepPattern;
+    else {
+        resultF = 0.0;
+    }
+
+    FLOAT_OUTPUTS_SET;
+} 

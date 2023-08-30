@@ -1,0 +1,20 @@
+#include "../../lib/Float.h"
+
+shader apFloatClamp
+[[
+    string help = "Clamp float value",
+    int rfm_nodeid = 0x0013cb87,
+    string rfm_classification = "rendernode/apettit/general/utility"
+]]
+(
+    FLOAT_INPUTS,
+    FLOAT_TAG_INPUTS(min),
+    FLOAT_TAG_INPUTS(max),
+
+    FLOAT_OUTPUTS
+)
+{
+    resultF = clamp(inputF, inputF_min, inputF_max); 
+
+    FLOAT_OUTPUTS_SET;
+}
