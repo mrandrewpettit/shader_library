@@ -1,37 +1,31 @@
 #-------------------------------------------------------------------------------
 # PRE PROCESS
 #-------------------------------------------------------------------------------
-ifndef PIXAR_ROOT
-	$(error PIXAR_ROOT needs to be set.)
-endif
-
-ifndef RMANTREE
-	$(error RMANTREE needs to be set.)
+ifndef ARNOLD_PATH
+	$(error ARNOLD_PATH needs to be set.)
 endif
 
 # Define variables if Makefile was not called recursively
 SRC_DIR ?= ../../..
-SCRIPT_DIR ?= $(SRC_DIR)/script
 BIN_DIR ?= $(SRC_DIR)/bin
 
-INSTALL_DIR := $(BIN_DIR)/general
+INSTALL_DIR := $(BIN_DIR)/c++/arnold
 
 # Subdirectories to search
-SUBDIRS := math pattern texture trace utility
+SUBDIRS := arnold
 
 # Set default target
 .DEFAULT_GOAL = all
 
 # Target time stamps to ignore
-.PHONY : all install # clean 
+.PHONY : all install
 
-src := $(foreach dir, $(SUBDIRS), $(wildcard $(dir)/*.osl))
-oso := $(src:%.osl=%.oso)
+src := $(foreach dir, $(SUBDIRS), $(wildcard $(dir)/*.cpp))
 
 #-------------------------------------------------------------------------------
 # ALL TARGET
 #-------------------------------------------------------------------------------
-all : install $(oso)
+all : install
 
 install : $(INSTALL_DIR)
 $(INSTALL_DIR) :
@@ -39,6 +33,8 @@ $(INSTALL_DIR) :
 
 # Compiler settings
 CC = "${RMANTREE}/bin/oslc.exe" # "" & .exe used for wsl implementation
+
+# cl /LD simple_shader.cpp /I %ARNOLD_PATH%\include %ARNOLD_PATH%\lib\ai.lib /link /out:simple_shader.dll
 
 %.oso : %.osl
 	$(CC) -o $@ $<

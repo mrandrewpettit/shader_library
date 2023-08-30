@@ -8,7 +8,7 @@ This repository contains the `osl` source code for shaders I have developed for 
 
 With alterations to the `make` system, other applications could still make use of the `osl` source code.
 
-## Install Library
+## Install OSL Library
 1. Download this repository
 
 2. Set these environment variables:
@@ -46,6 +46,27 @@ export WSLENV=$WSLENV:PIXAR_ROOT/p:RMAN_VERSION:RMANTREE/p:RMAN_SHADERPATH/p:RFM
 ```
 > To access the variables in windows you must start a wsl terminal and then access windows through `cmd.exe`
 
+## Install C++ Library
+> NOTE: the C++ library is currently only supported by mtoa (Arnold for Maya)
+
+1. Download this repository
+
+2. Set these environment variables:
+- ARNOLD_PATH - Path to the downloaded Arnold SDK
+- ARNOLD_PLUGIN_PATH - Path to compiled libraries
+- MTOA_TEMPLATES_PATH - Path maya looks at for UI templates
+
+```
+set ARNOLD_PATH="D:\applications\Arnold-7.1.0.0"
+set ARNOLD_PLUGIN_PATH=pathToShaderLibrary\src\c++\arnold
+set MTOA_TEMPLATES_PATH=pathToShaderLibrary\c++\arnold\shaderTemplates
+```
+3. You can compile the c++ shaders using the same `make` directions as above, steps 3-4.
+
+> NOTE: you can test if Arnold C++ shaders where compiled correctly by running Arnold's internal program `kick`. Something like this: `%ARNOLD_PATH%\bin\kick -l simple_shader.dll -info simple`
+
+>NOTE: see [Arnold for Maya Library Structure](#arnold-for-maya-library-structure) for additional notes on Arnold for Maya shader file structures
+
 ## Additional Information
 
 ### Library Structure
@@ -56,6 +77,15 @@ specific to the renderer, i.e. `src/osl/renderman`. Generally supported
 
  > NOTE: Therefore, renderers will generally need an environment variable that 
 points to both the general and their renderer specific bin folder. This is why `RMAN_SHADERPATH` requires two paths.
+
+### Arnold for Maya Library Structure
+- Compiled Shader:
+	- Example name: simpleShader.dll
+- Metadata File:
+	- Name must be the same as the compiled shader, e.g. simpleShader.dll
+	- Lives in the same folder as the compiled shader
+- Template File:
+	- file name and class name should follow this pattern, respectively, %ShaderName%Template.py and AE%ShaderName%Template
 
 ### Environment
 - `RFM_SITE_PATH` dir maya looks at for oso files at startup
@@ -71,21 +101,21 @@ node IDs 0 - 0x7ffff. To be safe, I have registered a node ID block with maya, a
 - See [Node IDs](./doc/NODE_IDS.md) for a breakdown of this shader libraries node IDs
 - Visit [Autodesk Website](https://mayaid.autodesk.io/) for more clarification on node IDs
 
-### APOSL Macros 
-It is difficult to implement reusable code within OSL syntax. To combat this APOSL leverages macros when defining shader
- parameters. This lets devs update many shaders by updating a single macro. The downfall of this method is code 
- readability becomes a bit ambiguous; though I feel the pros outweigh the cons in this case.
+### OSL Macros 
+It is difficult to implement reusable code within OSL syntax. To combat this, this shader library leverages macros when
+ defining shader parameters. This lets devs update many shaders by updating a single macro. The downfall of this method
+ is code  readability becomes a bit ambiguous; though I feel the pros outweigh the cons in this case.
 
-It is recommended that new devs familiarize themselves with macros found in `src/lib/params.h`, `src/lib/float.h`, and 
-`src/lib/color.h` to better understand shader parameter code in APOSL.
+It is recommended that new devs familiarize themselves with macros found in `src/lib/float.h`, and 
+`src/lib/color.h` to better understand shader parameter code in this shader library.
 
 ## License
 Apache License 2.0
 
 ## TODO
-- maya versioning system
-- maya node icon
-- houdinni support
+- add C++ shaders to make system
+- versioning shaders, if it's worth while
+- osl shader library go to `./bin/osl/<type>` instead of `./bin/osl`
 
 ## Shader Development Steps
 - Set parameters

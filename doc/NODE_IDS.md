@@ -37,7 +37,7 @@ Below is a breakdown of each APOSL node and its nodeid.
 | apPrimvar             | 0x0013cb96    |
 | apTexture             | 0x0013cb97    |
 | apFloatStep           | 0x0013cb98    |
-|                       | 0x0013cb99    |
+| apHalftone            | 0x0013cb99    |
 |                       | 0x0013cb9a    |
 |                       | 0x0013cb9b    |
 |                       | 0x0013cb9c    |

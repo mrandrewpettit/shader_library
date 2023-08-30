@@ -1,27 +1,13 @@
-float SafeDivide(float num, float den)
-{
-    return (den == 0.0) ? 0.0 : (num / den);
-}
-
-float RemapFloat(float inputF,
-                 float inputMin, float inputMax,
-                 float outputMin, float outputMax)
-{
-    float scale = SafeDivide((outputMax - outputMin), (inputMax - inputMin));
-    return outputMin + (clamp(inputF, inputMin, inputMax) - inputMin) * scale;
-}
+#include "../../lib/Math.h"
 
 shader apHalftone
 [[
 	string help = "Calculated Ambient Occlusion by tracing rays from the surface in the normal direction.",
-	int rfm_nodeid = 1234567,
+	int rfm_nodeid = 0x0013cb99,
 	string rfm_classification = "rendernode/apettit/general/trace"
 ]]
 (
-	//float m_ambient = 0.2,
 	float m_diffuse = 1.0,
-	//float m_specular = 0.4,
-	//int m_gls = 25,
 	color light_color = color(1.0),
 	color albedo = color(1),
 	vector light_vector = vector(1, 1, 0.25),
