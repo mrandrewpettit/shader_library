@@ -3,9 +3,10 @@
 
 shader apVectorLength
 [[
+    string category = "utility",
     string help = "Return length of a vector",
     int rfm_nodeid = 0x0013cb93,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     VECTOR_INPUTS,

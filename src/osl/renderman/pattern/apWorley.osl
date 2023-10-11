@@ -1,9 +1,10 @@
 shader apWorley
 [[
+    string category = "pattern",
 	string help = "Create Worley and Voronoi patterns. "
 				  "F1 is the distance to the frist closest cell point ",
 	int rfm_nodeid = 0x0013cb84,
-	string rfm_classification = "rendernode/apettit/general/pattern"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/pattern"
 ]]
 (
 	float frequency = 1.0

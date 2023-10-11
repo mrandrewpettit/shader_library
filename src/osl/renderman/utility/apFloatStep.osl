@@ -2,9 +2,10 @@
 
 shader apFloatStep
 [[
+    string category = "utility",
     string help = "Perform step based function on float values",
     int rfm_nodeid = 0x0013cb8f,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
 	float inputF = 0.0 [[ string label = "Input F" ]],

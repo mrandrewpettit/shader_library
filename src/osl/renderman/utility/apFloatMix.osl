@@ -2,9 +2,10 @@
 
 shader apFloatMix
 [[
+    string category = "utility",
     string help = "Mix float A and float B given a float mix value",
     int rfm_nodeid = 0x0013cb8b,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     FLOAT_TAG_INPUTS(A),

@@ -2,9 +2,10 @@
 
 shader apFloatAdd
 [[
+    string category = "math",
     string help = "Add float A and float B",
     int rfm_nodeid = 0x0013cb86,
-    string rfm_classification = "rendernode/apettit/general/math"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/math"
 ]]
 (
     FLOAT_TAG_INPUTS(A),

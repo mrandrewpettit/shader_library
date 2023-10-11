@@ -11,9 +11,10 @@ color LoadTexture(string filename, vector pt, output float alpha)
 
 shader apTextureBomb2D
 [[
+    string category = "texture",
 	string help = "Bomb a texture across a 2D manifold.",
 	int rfm_nodeid = 0x0013cb95,
-	string rfm_classification = "rendernode/apettit/general/texture"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/texture"
 ]]
 (
     color inputColor = color(1.0, 0.5, 0.0),

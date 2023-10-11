@@ -1,10 +1,11 @@
 #include "../../lib/Color.h"
 
-shader apColorMix_1
+shader apColorMix
 [[
+    string category = "utility",
     string help = "Mix color A and color B given a float mix value",
     int rfm_nodeid = 0x0013cb82,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     COLOR_ALPHA_TAG_INPUTS(A),

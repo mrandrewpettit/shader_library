@@ -3,9 +3,10 @@
 
 shader apFloatTrig
 [[
+    string category = "math",
     string help = "Apply trigonometric function to a float value.",
     int rfm_nodeid = 0x0013cb91,
-    string rfm_classification = "rendernode/apettit/general/math"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/math"
 ]]
 (
 	float inputAngle = 0.0 [[ string label = "Angle" ]],

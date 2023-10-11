@@ -2,9 +2,10 @@
 
 shader apColorConstruct
 [[
+    string category = "utility",
     string help = "Create color from split inputs",
     int rfm_nodeid = 0x0013cb81,
-    string rfm_classification = "rendernode/apettit/general/utiltiy"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
 	COLOR_SPLIT_INPUTS,

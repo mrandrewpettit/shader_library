@@ -3,9 +3,10 @@
 
 shader apFloatDivide
 [[
+    string category = "math",
     string help = "Divide float A and float B. If Input B is 0.0 then returns 0.0",
     int rfm_nodeid = 0x0013cb88,
-    string rfm_classification = "rendernode/apettit/general/math"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/math"
 ]]
 (
     FLOAT_TAG_INPUTS(A),

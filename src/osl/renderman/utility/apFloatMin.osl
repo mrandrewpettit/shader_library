@@ -2,9 +2,10 @@
 
 shader apFloatMin
 [[
+    string category = "utility",
     string help = "Returns min value between float A and float B",
     int rfm_nodeid = 0x0013cb8a,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     FLOAT_TAG_INPUTS(A),

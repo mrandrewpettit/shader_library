@@ -21,7 +21,7 @@ BIN_DIR ?= $(SRC_DIR)/bin
 export BIN_DIR
 
 # Subdirectories to search
-SUB_DIR := ./src/osl/renderman ./src/osl/general #./src/c++/arnold
+SUB_DIR := ./src/osl/renderman #./src/c++/arnold
 
 # Set default target
 .DEFAULT_GOAL = all

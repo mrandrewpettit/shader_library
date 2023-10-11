@@ -2,9 +2,10 @@
 
 shader apColor
 [[
+    string category = "utility",
     string help = "Simple color pass-through operation",
     int rfm_nodeid = 0x0013cb85,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
 	color inputRGB = COLOR_DEF

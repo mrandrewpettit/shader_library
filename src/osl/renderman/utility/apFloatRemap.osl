@@ -3,9 +3,10 @@
 
 shader apFloatRemap
 [[
+    string category = "utility",
     string help = "Remap float operation",
     int rfm_nodeid = 0x0013cb8e,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     FLOAT_INPUTS,

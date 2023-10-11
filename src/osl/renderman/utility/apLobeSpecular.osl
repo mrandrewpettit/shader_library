@@ -3,9 +3,10 @@
 
 shader apLobeSpecular
 [[
+    string category = "utility",
     string help = "apettit's prefered inputs for pxrSurface's specular lobe",
     int rfm_nodeid = 0x0013cb94,
-    string rfm_classification = "rendernode/apettit/renderman/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
 	float inputKFace = 1.0 [[ string label = "KFace" ]],

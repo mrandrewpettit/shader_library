@@ -2,9 +2,10 @@
 
 shader apHalftone
 [[
+    string category = "pattern",
 	string help = "Calculated Ambient Occlusion by tracing rays from the surface in the normal direction.",
 	int rfm_nodeid = 0x0013cb99,
-	string rfm_classification = "rendernode/apettit/general/trace"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/pattern"
 ]]
 (
 	float m_diffuse = 1.0,

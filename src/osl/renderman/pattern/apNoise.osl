@@ -1,8 +1,9 @@
 shader apNoise
 [[
+    string category = "pattern",
 	string help = "Create a 4D noise pattern.",
 	int rfm_nodeid = 0x0013cb83,
-	string rfm_classification = "rendernode/apettit/general/pattern"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/pattern"
 ]]
 (
 	string type = "uperlin"

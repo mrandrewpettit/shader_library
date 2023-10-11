@@ -2,9 +2,10 @@
 
 shader apFloatClamp
 [[
+    string category = "utility",
     string help = "Clamp float value",
     int rfm_nodeid = 0x0013cb87,
-    string rfm_classification = "rendernode/apettit/general/utility"
+    string rfm_classification = "rendernode/RenderMan/pattern/apettit/utility"
 ]]
 (
     FLOAT_INPUTS,
